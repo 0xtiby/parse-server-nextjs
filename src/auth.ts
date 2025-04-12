@@ -12,6 +12,8 @@ import { v4 as uuidv4 } from "uuid";
 import Parse from "./parse";
 import { parseConfig } from "./parse";
 import { SessionService } from "./session";
+import { Attributes } from "parse";
+import ParseUser from "parse/types/ParseUser";
 
 export class AuthServiceError extends Error {
   constructor(message: string, public code: number) {
@@ -206,7 +208,7 @@ export class AuthService {
     return params;
   };
 
-  private createSessionFromUser(user: Parse.User<Parse.Attributes>): Session {
+  private createSessionFromUser(user: ParseUser<Attributes>): Session {
     return {
       userId: user.id!,
       sessionToken: user.getSessionToken()!,

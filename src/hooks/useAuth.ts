@@ -36,11 +36,12 @@ export function useAuth() {
     }
   };
 
-  const signup = useCallback(async (authType: string, data: AuthData) => {
+  type AuthType = "credentials" | "third-party";
+  const signup = useCallback(async (authType: AuthType, data: AuthData) => {
     return fetchAuth<AuthResponse>(API_PATHS.SIGNUP, "POST", { authType, data });
   }, []);
 
-  const login = useCallback(async (authType: string, data: AuthData) => {
+  const login = useCallback(async (authType: AuthType, data: AuthData) => {
     return fetchAuth<AuthResponse>(API_PATHS.SIGNIN, "POST", { authType, data });
   }, []);
 
