@@ -191,6 +191,45 @@ const result = await login("third-party", {
 
 ### OAuth Authentication
 
+### OAuth Configuration
+
+To enable OAuth authentication, you need to configure the OAuth providers in your application. Here's an example using GitHub as a provider:
+`app/api/auth/[...next-parse-auth]/route.ts`
+
+```typescript
+import { createAuth } from "next-parse-auth";
+import { environments } from "@/config/env";
+
+const oAuthProviders = {
+  github: {
+    authorizeUrl: `https://github.com/login/oauth/authorize?client_id=${environments.GITHUB_CLIENT_ID}&redirect_uri=${environments.GITHUB_REDIRECT_URI}&scope=${environments.GITHUB_SCOPE}`,
+    callBackFunction: (providerName: string, data: { code: string }) => {
+      return {
+        providerName,
+        authData: {
+          code: data.code,
+        },
+      };
+    },
+  },
+};
+
+const auth = createAuth({
+  oAuthProviders,
+});
+export const GET = auth.handlers.GET;
+export const POST = auth.handlers.POST;
+```
+
+The `authorizeUrl` is the URL that users will be redirected to when initiating the OAuth flow. For github this URL typically includes:
+
+- `client_id`: Your application's ID registered with the OAuth provider
+- `redirect_uri`: The URL where the provider will redirect back to after authorization
+- `scope`: The permissions your app is requesting
+- Any other provider-specific parameters
+
+The `callBackFunction` is the function called right after being redirect from your third party. All query params are return as `data`. The return object will be used for the signInwith method of parse server.
+
 ```typescript
 const { getOAuthUrl } = useAuth();
 
@@ -227,3 +266,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+
+```
