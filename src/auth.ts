@@ -153,9 +153,6 @@ export class AuthService {
 
   async getSession(): Promise<Session> {
     const session = await SessionService.getSession();
-    if (!session) {
-      throw new AuthServiceError("No session found", 400);
-    }
     return session;
   }
 
