@@ -183,15 +183,11 @@ const result = await challenge({ otp: { email: data.email } });
 // next login
 const result = await login("third-party", {
   providerName: "otp",
-  email: "your-email",
-  username: "your-email",
   authData: { email: "your-email", otp: "one time password", id: "your-email" },
 });
 ```
 
 ### OAuth Authentication
-
-### OAuth Configuration
 
 To enable OAuth authentication, you need to configure the OAuth providers in your application. Here's an example using GitHub as a provider:
 `app/api/auth/[...next-parse-auth]/route.ts`
@@ -259,6 +255,18 @@ try {
 }
 ```
 
+### Logout
+
+To enable logout functionality, you need to define a cloud function in your Parse Server configuration. Add the following to your cloud code:
+
+```typescript
+import { parseAuthLogout, LOGOUT_FUNCTION_NAME } from "next-parse-auth/parse";
+
+Parse.Cloud.define(LOGOUT_FUNCTION_NAME, parseAuthLogout, {
+  requireUser: true,
+});
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues to discuss new features or improvements.
@@ -266,7 +274,3 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-
-```

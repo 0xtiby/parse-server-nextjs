@@ -21,8 +21,6 @@ export interface CredentialsAuth {
 export interface ThirdPartyAuth {
   providerName: string;
   authData: Record<string, any>;
-  email?: string;
-  username?: string;
 }
 
 export type AuthData = CredentialsAuth | ThirdPartyAuth;

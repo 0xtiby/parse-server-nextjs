@@ -8,19 +8,24 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/next/index.js",
+      "import": "./dist/next/index.mjs",
+      "types": "./dist/next/index.d.ts"
     },
     "./hooks": {
-      "require": "./dist/hooks/index.js",
-      "import": "./dist/hooks/index.mjs",
-      "types": "./dist/hooks/index.d.ts"
+      "require": "./dist/next/hooks/index.js",
+      "import": "./dist/next/hooks/index.mjs",
+      "types": "./dist/next/hooks/index.d.ts"
+    },
+    "./parse": {
+      "require": "./dist/parse/index.js",
+      "import": "./dist/parse/index.mjs",
+      "types": "./dist/parse/index.d.ts"
     }
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/next/index.js",
+  "module": "./dist/next/index.mjs",
+  "types": "./dist/next/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup ./src"

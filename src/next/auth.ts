@@ -14,6 +14,7 @@ import { parseConfig } from "./parse";
 import { SessionService } from "./session";
 import { Attributes } from "parse";
 import ParseUser from "parse/types/ParseUser";
+import { LOGOUT_FUNCTION_NAME } from "../common/function-name";
 
 export class AuthServiceError extends Error {
   constructor(message: string, public code: number) {
@@ -111,7 +112,7 @@ export class AuthService {
     }
     try {
       await Parse.Cloud.run(
-        "logout",
+        LOGOUT_FUNCTION_NAME,
         {},
         {
           sessionToken: session.sessionToken,
@@ -181,19 +182,10 @@ export class AuthService {
   }
 
   private async signinWithThirdParty(data: ThirdPartyAuth): Promise<Session> {
-    const { providerName, authData, email, username } = data;
-    const parseUser = new Parse.User();
-    if (email) {
-      parseUser.set("email", email);
-    }
-    if (username) {
-      parseUser.set("username", username);
-    }
-    const user = await parseUser.linkWith(providerName, { authData });
-
+    const { providerName, authData } = data;
+    const user = await Parse.User.logInWith(providerName, { authData });
     const session = this.createSessionFromUser(user);
     await SessionService.setSession(session);
-
     return session;
   }
 
