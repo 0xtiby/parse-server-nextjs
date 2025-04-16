@@ -24,14 +24,16 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     const fetchSession = async () => {
       try {
         const response = await getSession();
-
-        if (response.success) {
-          setSessionData((response as AuthResponse).session);
-          setStatus("authenticated");
-        } else {
-          setSessionData(null);
-          setStatus("unauthenticated");
+        if (!response.success) {
+          throw new Error("invalid response");
         }
+        const { session } = response as AuthResponse;
+
+        if (session === null || Object.keys(session).length === 0) {
+          throw new Error("invalid session");
+        }
+        setSessionData(session);
+        setStatus("authenticated");
       } catch (error) {
         setSessionData(null);
         setStatus("unauthenticated");
