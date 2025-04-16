@@ -89,7 +89,7 @@ The `useAuth` hook provides all necessary methods for handling authentication:
 - **loading**: Boolean state indicating if an auth operation is in progress
 
 ```typescript
-import { useAuth } from 'next-parse-auth';
+import { useAuth } from 'next-parse-auth/client';
 
 function LoginComponent() {
   const { login, loading } = useAuth();
@@ -110,6 +110,59 @@ function LoginComponent() {
   );
 }
 ```
+
+### Session Management
+
+Next Parse Auth provides a SessionProvider and useSession hook for easy session state management across your application.
+
+#### SessionProvider
+
+Wrap your application with SessionProvider to enable session state management:
+
+```typescript
+// app/layout.tsx
+import { SessionProvider } from "next-parse-auth/client";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html>
+      <body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+#### useSession Hook
+
+The `useSession` hook provides easy access to the current session state:
+
+```typescript
+import { useSession } from "next-parse-auth/client";
+
+function ProfileComponent() {
+  const { data, status } = useSession();
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "unauthenticated") {
+    return <div>Please sign in</div>;
+  }
+
+  return <div>Welcome {data?.userId}</div>;
+}
+```
+
+The hook returns:
+
+- `data`: The session data (null if not authenticated)
+- `status`: One of three states:
+  - `'loading'`: Initial session loading
+  - `'authenticated'`: User is signed in
+  - `'unauthenticated'`: No active session
 
 ### Route Protection
 

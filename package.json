@@ -12,10 +12,10 @@
       "import": "./dist/next/index.mjs",
       "types": "./dist/next/index.d.ts"
     },
-    "./hooks": {
-      "require": "./dist/next/hooks/index.js",
-      "import": "./dist/next/hooks/index.mjs",
-      "types": "./dist/next/hooks/index.d.ts"
+    "./client": {
+      "require": "./dist/next/client/index.js",
+      "import": "./dist/next/client/index.mjs",
+      "types": "./dist/next/client/index.d.ts"
     },
     "./parse": {
       "require": "./dist/parse/index.js",
