@@ -1,6 +1,6 @@
 {
   "name": "next-parse-auth",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Authentication library for Next.js using Parse Server",
   "files": [
     "dist",
