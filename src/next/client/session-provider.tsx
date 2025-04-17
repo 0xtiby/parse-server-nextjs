@@ -19,7 +19,7 @@ export const SessionContext = createContext<SessionContextType>({
 export function SessionProvider({ children }: { children: ReactNode }) {
   const { getSession } = useAuth();
   const { data: response, isLoading } = useQuery({
-    queryKey: ["session"],
+    queryKey: ["next-parse-auth-session"],
     queryFn: getSession,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
