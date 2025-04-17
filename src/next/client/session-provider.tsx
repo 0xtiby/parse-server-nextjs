@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { createContext, type ReactNode } from "react";
 import { Session } from "../types";
 import { useAuth } from "./use-auth";
 import { AuthResponse } from "../auth";
@@ -13,35 +16,23 @@ export const SessionContext = createContext<SessionContextType>({
   status: "loading",
 });
 
-export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const [sessionData, setSessionData] = useState<Session | null>(null);
-  const [status, setStatus] = useState<"loading" | "authenticated" | "unauthenticated">(
-    "loading"
-  );
+export function SessionProvider({ children }: { children: ReactNode }) {
   const { getSession } = useAuth();
+  const { data: response, isLoading } = useQuery({
+    queryKey: ["session"],
+    queryFn: getSession,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const response = await getSession();
-        if (!response.success) {
-          throw new Error("invalid response");
-        }
-        const { session } = response as AuthResponse;
+  const sessionData = response?.success ? (response as AuthResponse).session : null;
+  const status = isLoading
+    ? "loading"
+    : sessionData
+    ? "authenticated"
+    : "unauthenticated";
 
-        if (session === null || Object.keys(session).length === 0) {
-          throw new Error("invalid session");
-        }
-        setSessionData(session);
-        setStatus("authenticated");
-      } catch (error) {
-        setSessionData(null);
-        setStatus("unauthenticated");
-      }
-    };
-
-    fetchSession();
-  }, [getSession]);
   return (
     <SessionContext.Provider value={{ data: sessionData, status }}>
       {children}

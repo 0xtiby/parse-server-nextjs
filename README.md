@@ -113,21 +113,50 @@ function LoginComponent() {
 
 ### Session Management
 
-Next Parse Auth provides a SessionProvider and useSession hook for easy session state management across your application.
+Next Parse Auth provides a SessionProvider and useSession hook for easy session state management across your application. It uses TanStack Query (React Query) for efficient data fetching and caching.
 
-#### SessionProvider
+#### Setup with TanStack Query
 
-Wrap your application with SessionProvider to enable session state management:
+First, set up TanStack Query in your application:
+
+```typescript
+// app/providers.tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-parse-auth/client";
+import { useState, type ReactNode } from "react";
+
+export function Providers({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // You can customize the default options here
+            staleTime: 1000 * 60 * 5, // 5 minutes
+          },
+        },
+      })
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider>{children}</SessionProvider>
+    </QueryClientProvider>
+  );
+}
+```
+
+Then use it in your layout:
 
 ```typescript
 // app/layout.tsx
-import { SessionProvider } from "next-parse-auth/client";
+import { Providers } from "./providers";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html>
       <body>
-        <SessionProvider>{children}</SessionProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
@@ -136,7 +165,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 #### useSession Hook
 
-The `useSession` hook provides easy access to the current session state:
+The `useSession` hook provides real-time access to the current session state using TanStack Query. It automatically refetches the session data in the following scenarios:
+
+- When the window regains focus
+- When the network reconnects
+- Every 5 minutes (configurable via QueryClient options)
 
 ```typescript
 import { useSession } from "next-parse-auth/client";
@@ -158,11 +191,29 @@ function ProfileComponent() {
 
 The hook returns:
 
-- `data`: The session data (null if not authenticated)
+- `data`: The current session data (null if not authenticated)
 - `status`: One of three states:
-  - `'loading'`: Initial session loading
+  - `'loading'`: Session data is being fetched
   - `'authenticated'`: User is signed in
   - `'unauthenticated'`: No active session
+
+The session data is automatically kept in sync across all components using the hook, thanks to TanStack Query's built-in cache management and real-time updates.
+
+Note: To manually refresh the session data, you can use TanStack Query's invalidation:
+
+```typescript
+import { useQueryClient } from "@tanstack/react-query";
+
+function RefreshSessionComponent() {
+  const queryClient = useQueryClient();
+
+  const refreshSession = () => {
+    queryClient.invalidateQueries({ queryKey: ["session"] });
+  };
+
+  return <button onClick={refreshSession}>Refresh Session</button>;
+}
+```
 
 ### Route Protection
 
