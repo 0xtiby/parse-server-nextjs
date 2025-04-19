@@ -127,12 +127,36 @@ export class AuthService {
     }
   }
 
-  async redirectToOAuth(oAuthConfig: OAuthConfig) {
+  async redirectToOAuth(oAuthConfig: OAuthConfig): Promise<string> {
     const state = uuidv4();
-    await SessionService.setOAuthSession(state);
+    let codeVerifier: string | undefined = undefined;
 
     const url = new URL(oAuthConfig.authorizeUrl);
     url.searchParams.append("state", state);
+
+    if (oAuthConfig.pkce) {
+      // 1. Generate code_verifier - random string
+      codeVerifier = crypto.randomUUID().replace(/-/g, "");
+
+      // 2. Generate code_challenge - base64url encoded SHA256 hash
+      const encoder = new TextEncoder();
+      const data = encoder.encode(codeVerifier);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const codeChallenge = btoa(String.fromCharCode(...hashArray))
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=/g, "");
+
+      // 3. Add PKCE parameters to the URL
+      url.searchParams.append("code_challenge", codeChallenge);
+      url.searchParams.append("code_challenge_method", "S256");
+    }
+
+    // Store the state and potentially the code_verifier in session
+    // SessionService.setOAuthSession should be modified to accept codeVerifier
+    await SessionService.setOAuthSession(state, codeVerifier);
+
     return url.toString();
   }
 
@@ -142,13 +166,16 @@ export class AuthService {
     params: URLSearchParams
   ) {
     const session = await SessionService.getOAuthSession();
-    const { authState } = session;
+    const { authState, codeVerifier } = session;
     const { state, ...rest } = this.searchParamsToObject(params);
     if (state !== authState) {
       throw new AuthServiceError("Invalid state", 400);
     }
     await SessionService.deleteOAuthSession();
-    const data = oAuthConfig.callBackFunction(providerName, rest);
+    const data = await oAuthConfig.callBackFunction(providerName, {
+      ...rest,
+      codeVerifier,
+    });
     return this.signin(AUTH_TYPES.THIRD_PARTY, data);
   }
 

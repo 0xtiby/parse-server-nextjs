@@ -38,11 +38,16 @@ export interface Session {
 
 export interface OAuthSession {
   authState: string;
+  codeVerifier?: string;
 }
 
 export interface OAuthConfig {
   authorizeUrl: string;
-  callBackFunction: (providerName: string, data: any) => ThirdPartyAuth;
+  callBackFunction: (
+    providerName: string,
+    data: any
+  ) => ThirdPartyAuth | Promise<ThirdPartyAuth>;
   loginPage?: string;
   afterLoginRedirect?: string;
+  pkce?: boolean;
 }

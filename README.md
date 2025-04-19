@@ -252,14 +252,23 @@ import { environments } from "@/config/env";
 const oAuthProviders = {
   github: {
     authorizeUrl: `https://github.com/login/oauth/authorize?client_id=${environments.GITHUB_CLIENT_ID}&redirect_uri=${environments.GITHUB_REDIRECT_URI}&scope=${environments.GITHUB_SCOPE}`,
-    callBackFunction: (providerName: string, data: { code: string }) => {
+    callBackFunction: async (
+      providerName: string,
+      data: { code: string; codeVerifier?: string }
+    ) => {
+      // Example: Exchange code for token using codeVerifier if PKCE is enabled
+      // const token = await exchangeCodeForToken(data.code, data.codeVerifier);
       return {
         providerName,
         authData: {
+          // Include necessary auth data for Parse Server's `signInWith`
           code: data.code,
+          // Potentially include access_token or other relevant data
         },
       };
     },
+    // Enable PKCE for enhanced security (optional)
+    pkce: true,
   },
 };
 
@@ -277,7 +286,9 @@ The `authorizeUrl` is the URL that users will be redirected to when initiating t
 - `scope`: The permissions your app is requesting
 - Any other provider-specific parameters
 
-The `callBackFunction` is the function called right after being redirect from your third party. All query params are return as `data`. The return object will be used for the signInwith method of parse server.
+The `callBackFunction` is the function called right after being redirect from your third party. All query params are return as `data`. **This function can be synchronous or asynchronous (return a Promise)**. If PKCE is enabled (`pkce: true`), the `data` object will also contain the `codeVerifier` which might be needed to exchange the authorization code for an access token. The return object will be used for the `signInWith` method of parse server.
+
+The `pkce: true` option enables Proof Key for Code Exchange (PKCE), an extension to the Authorization Code flow which enhances security, especially for public clients like SPAs. When enabled, the library automatically handles the generation of `code_verifier` and `code_challenge`.
 
 ```typescript
 const { getOAuthUrl } = useAuth();
