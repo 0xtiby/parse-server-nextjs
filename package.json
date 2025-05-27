@@ -29,7 +29,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup ./src",
-    "release": "pnpm version $1 && git push && git push --tags && pnpm build && pnpm publish"
+    "release:patch": "pnpm version patch && git push && git push --tags && pnpm build && pnpm publish",
+    "release:minor": "pnpm version minor && git push && git push --tags && pnpm build && pnpm publish",
+    "release:major": "pnpm version major && git push && git push --tags && pnpm build && pnpm publish"
   },
   "repository": {
     "type": "git",
