@@ -14,14 +14,10 @@ import { parseConfig } from "./parse";
 import { SessionService } from "./session";
 import { Attributes } from "parse";
 import ParseUser from "parse/types/ParseUser";
-
-export const LOGOUT_FUNCTION_NAME = "parseauthkit-logout";
+import { LOGOUT_FUNCTION_NAME } from "../../parse-server";
 
 export class AuthServiceError extends Error {
-  constructor(
-    message: string,
-    public code: number
-  ) {
+  constructor(message: string, public code: number) {
     super(message);
   }
 

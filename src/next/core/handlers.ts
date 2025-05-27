@@ -129,10 +129,10 @@ export function createAuth(config?: { oAuthProviders: Record<string, OAuthConfig
 
   const httpHandler = async (
     request: NextRequest,
-    context: { params: { parseauthkit: string[] } }
+    context: { params: { "next-parse-auth": string[] } }
   ) => {
     const params = await context.params;
-    const [action, provider] = params["parseauthkit"];
+    const [action, provider] = params["next-parse-auth"];
     return handlers.handleAuthRoute(request, action, provider);
   };
 
