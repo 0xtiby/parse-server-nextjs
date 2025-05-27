@@ -18,9 +18,9 @@
       "import": "./dist/next/client/index.mjs"
     },
     "./parse-server": {
-      "types": "./dist/parse/index.d.ts",
-      "require": "./dist/parse/index.js",
-      "import": "./dist/parse/index.mjs"
+      "types": "./dist/parse-server/index.d.ts",
+      "require": "./dist/parse-server/index.js",
+      "import": "./dist/parse-server/index.mjs"
     }
   },
   "main": "./dist/next/index.js",
