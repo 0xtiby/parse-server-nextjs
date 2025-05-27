@@ -1,4 +1,4 @@
-import { getIronSession, IronSession, SessionOptions } from "iron-session";
+import { getIronSession, IronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { OAuthSession, Session } from "./types";
 import { NextRequest, NextResponse } from "next/server";

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { API_PATHS } from "../constants";
-import { AuthData } from "../types";
-import { AuthResponse, ChallengeResponse } from "../auth";
+import { API_PATHS } from "../core/constants";
+import { AuthData } from "../core/types";
+import { AuthResponse, ChallengeResponse } from "../core/auth";
 
 export function useAuth() {
   const [loading, setLoading] = useState<boolean>(true);

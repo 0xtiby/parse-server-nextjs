@@ -14,10 +14,14 @@ import { parseConfig } from "./parse";
 import { SessionService } from "./session";
 import { Attributes } from "parse";
 import ParseUser from "parse/types/ParseUser";
-import { LOGOUT_FUNCTION_NAME } from "../common/function-name";
+
+export const LOGOUT_FUNCTION_NAME = "parseauthkit-logout";
 
 export class AuthServiceError extends Error {
-  constructor(message: string, public code: number) {
+  constructor(
+    message: string,
+    public code: number
+  ) {
     super(message);
   }
 
@@ -156,7 +160,6 @@ export class AuthService {
     // Store the state and potentially the code_verifier in session
     // SessionService.setOAuthSession should be modified to accept codeVerifier
     await SessionService.setOAuthSession(state, codeVerifier);
-
     return url.toString();
   }
 

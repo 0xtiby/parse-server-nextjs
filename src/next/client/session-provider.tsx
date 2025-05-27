@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, useCallback } from "react";
-import { Session } from "../types";
+import { Session } from "../core/types";
 import { useAuth } from "./use-auth";
-import { AuthResponse } from "../auth";
+import { AuthResponse } from "../core/auth";
 
 type SessionContextType = {
   data: Session | null;
@@ -17,7 +17,7 @@ export const SessionContext = createContext<SessionContextType>({
   setSession: () => {},
 });
 
-const POLLING_INTERVAL = 10 * 1000; // 10 seconds
+const POLLING_INTERVAL = 10 * 1000;
 const BROADCAST_CHANNEL_KEY = "auth-session-sync";
 
 export function SessionProvider({
@@ -47,7 +47,6 @@ export function SessionProvider({
       setSessionData(session);
       setStatus("authenticated");
 
-      // Broadcast the session update to other tabs
       const broadcast = new BroadcastChannel(BROADCAST_CHANNEL_KEY);
       broadcast.postMessage({ type: "session-update", session, status: "authenticated" });
       broadcast.close();
@@ -55,7 +54,6 @@ export function SessionProvider({
       setSessionData(null);
       setStatus("unauthenticated");
 
-      // Broadcast the session update to other tabs
       const broadcast = new BroadcastChannel(BROADCAST_CHANNEL_KEY);
       broadcast.postMessage({
         type: "session-update",
@@ -67,10 +65,8 @@ export function SessionProvider({
   }, [getSession]);
 
   useEffect(() => {
-    // Set up broadcast channel for cross-tab communication
     const broadcast = new BroadcastChannel(BROADCAST_CHANNEL_KEY);
 
-    // Listen for session updates from other tabs
     broadcast.onmessage = (event) => {
       if (event.data.type === "session-update") {
         setSessionData(event.data.session);
@@ -78,13 +74,10 @@ export function SessionProvider({
       }
     };
 
-    // Set up polling interval
     const intervalId = setInterval(fetchSession, refreshInterval);
 
-    // Initial session fetch
     fetchSession();
 
-    // Cleanup
     return () => {
       clearInterval(intervalId);
       broadcast.close();
@@ -95,7 +88,6 @@ export function SessionProvider({
     setSessionData(session);
     setStatus("authenticated");
 
-    // Broadcast aux autres onglets
     const broadcast = new BroadcastChannel(BROADCAST_CHANNEL_KEY);
     broadcast.postMessage({
       type: "session-update",
