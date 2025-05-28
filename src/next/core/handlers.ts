@@ -129,10 +129,10 @@ export function createAuth(config?: { oAuthProviders: Record<string, OAuthConfig
 
   const httpHandler = async (
     request: NextRequest,
-    context: { params: { "next-parse-auth": string[] } }
+    context: { params: { "psnjs-auth": string[] } }
   ) => {
     const params = await context.params;
-    const [action, provider] = params["next-parse-auth"];
+    const [action, provider] = params["psnjs-auth"];
     return handlers.handleAuthRoute(request, action, provider);
   };
 

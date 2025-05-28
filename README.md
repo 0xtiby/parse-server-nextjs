@@ -1,6 +1,6 @@
-# Next Parse Auth
+# Parse Server Nextjs
 
-Next Parse Auth is an authentication library for Next.js that integrates with Parse Server. It provides a complete solution for handling authentication in your Next.js applications, supporting both credentials-based, custom auth adapter and OAuth authentication.
+Parse Server Nextjs is an authentication library for Next.js that integrates with Parse Server. It provides a complete solution for handling authentication in your Next.js applications, supporting both credentials-based, custom auth adapter and OAuth authentication.
 
 ## Features
 
@@ -15,7 +15,7 @@ Next Parse Auth is an authentication library for Next.js that integrates with Pa
 Install the package via npm:
 
 ```bash
-npm install next-parse-auth
+npm install parse-server-nextjs
 ```
 
 ## Configuration
@@ -31,10 +31,10 @@ SESSION_SECRET=your_session_secret
 
 ### Basic Setup
 
-Create an api route named `app/api/auth/[...next-parse-auth]/route.ts`
+Create an api route named `app/api/auth/[...psnjs-auth]/route.ts`
 
 ```typescript
-import { createAuth } from "next-parse-auth";
+import { createAuth } from "parse-server-nextjs";
 
 const auth = createAuth();
 export const GET = auth.handlers.GET;
@@ -121,7 +121,7 @@ Wrap your application with SessionProvider to enable session state management:
 
 ```typescript
 // app/layout.tsx
-import { SessionProvider } from "next-parse-auth/client";
+import { SessionProvider } from "parse-server-nextjs/client";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -139,7 +139,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 The `useSession` hook provides easy access to the current session state:
 
 ```typescript
-import { useSession } from "next-parse-auth/client";
+import { useSession } from "parse-server-nextjs/client";
 
 function ProfileComponent() {
   const { data, status } = useSession();
@@ -172,7 +172,7 @@ Protect your application routes using the provided `authMiddleware`. Configure t
 
 ```typescript
 // File: middleware.ts
-import { authMiddleware } from "next-parse-auth/middleware";
+import { authMiddleware } from "parse-server-nextjs/middleware";
 
 export const config = {
   matcher: [
@@ -197,7 +197,7 @@ export { authMiddleware as middleware };
 Use the `auth()` function in server components or route handlers to protect server-side resources:
 
 ```ts
-import { auth } from "next-parse-auth";
+import { auth } from "parse-server-nextjs";
 
 export default function ProtectedPage() {
   const session = await auth();
@@ -246,7 +246,7 @@ To enable OAuth authentication, you need to configure the OAuth providers in you
 `app/api/auth/[...next-parse-auth]/route.ts`
 
 ```typescript
-import { createAuth } from "next-parse-auth";
+import { createAuth } from "parse-server-nextjs";
 import { environments } from "@/config/env";
 
 const oAuthProviders = {
@@ -324,7 +324,7 @@ try {
 To enable logout functionality, you need to define a cloud function in your Parse Server configuration. Add the following to your cloud code:
 
 ```typescript
-import { parseAuthLogout, LOGOUT_FUNCTION_NAME } from "next-parse-auth/parse";
+import { parseAuthLogout, LOGOUT_FUNCTION_NAME } from "parse-server-nextjs/parse";
 
 Parse.Cloud.define(LOGOUT_FUNCTION_NAME, parseAuthLogout, {
   requireUser: true,
