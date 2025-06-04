@@ -29,9 +29,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup ./src",
-    "release:patch": "pnpm version patch && git push && git push --tags && pnpm build && pnpm publish",
-    "release:minor": "pnpm version minor && git push && git push --tags && pnpm build && pnpm publish",
-    "release:major": "pnpm version major && git push && git push --tags && pnpm build && pnpm publish"
+    "setup:branch-protection": "./scripts/setup-branch-protection.sh"
   },
   "repository": {
     "type": "git",
@@ -52,6 +50,13 @@
   "devDependencies": {
     "@types/parse": "^3.0.9",
     "@types/react": "^19.1.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^11.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.6",
+    "@semantic-release/npm": "^11.0.2",
+    "@semantic-release/release-notes-generator": "^12.1.0",
+    "semantic-release": "^23.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5"
   },

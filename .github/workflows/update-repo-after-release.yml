@@ -1,0 +1,77 @@
+name: Update Repository After Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Release tag to process (e.g., v1.2.0)"
+        required: true
+        default: "v1.2.0"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Get release info
+        id: release
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG_NAME="${{ github.event.inputs.tag_name }}"
+          else
+            TAG_NAME="${{ github.event.release.tag_name }}"
+          fi
+          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
+          VERSION="${TAG_NAME#v}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Update package.json version
+        run: |
+          npm version ${{ steps.release.outputs.version }} --no-git-tag-version
+
+      - name: Generate CHANGELOG
+        run: |
+          echo "# Changelog" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          gh api repos/${{ github.repository }}/releases \
+            --jq '.[] | "## [\(.tag_name)](\(.html_url)) (\(.published_at | split("T")[0]))\n\n\(.body)\n"' \
+            >> CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update package.json and CHANGELOG for release ${{ steps.release.outputs.tag_name }}"
+          title: "🤖 Update repo after release ${{ steps.release.outputs.tag_name }}"
+          body: |
+            Automated update after release ${{ steps.release.outputs.tag_name }}
+
+            Changes:
+            - 📦 Update package.json version to ${{ steps.release.outputs.version }}
+            - 📋 Update CHANGELOG.md with latest releases
+
+            This PR was created automatically after the release was published.
+          branch: chore/update-after-release-${{ steps.release.outputs.version }}
+          delete-branch: true
