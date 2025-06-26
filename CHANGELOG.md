@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.4.0](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.4.0) (2025-06-20)
+
+# [1.4.0](https://github.com/0xtiby/parse-server-nextjs/compare/v1.3.0...v1.4.0) (2025-06-20)
+
+
+### Features
+
+* add SessionService export to core index ([cd5458f](https://github.com/0xtiby/parse-server-nextjs/commit/cd5458fa14865e18fbf20d560f46a78b232c2853))
+
+
+
+
+
 ## [v1.3.0](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.3.0) (2025-06-04)
 
 # [1.3.0](https://github.com/0xtiby/parse-server-nextjs/compare/v1.2.0...v1.3.0) (2025-06-04)
