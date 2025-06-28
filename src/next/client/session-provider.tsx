@@ -8,6 +8,7 @@ type SessionContextType = {
   status: "loading" | "authenticated" | "unauthenticated";
   refresh: () => Promise<void>;
   setSession: (session: Session) => void;
+  clearSession: () => void;
 };
 
 export const SessionContext = createContext<SessionContextType>({
@@ -15,6 +16,7 @@ export const SessionContext = createContext<SessionContextType>({
   status: "loading",
   refresh: async () => {},
   setSession: () => {},
+  clearSession: () => {},
 });
 
 const POLLING_INTERVAL = 10 * 1000;
@@ -97,9 +99,20 @@ export function SessionProvider({
     broadcast.close();
   }, []);
 
+  const clearSession = useCallback(() => {
+    setSessionData(null);
+    setStatus("unauthenticated");
+  }, []);
+
   return (
     <SessionContext.Provider
-      value={{ data: sessionData, status, refresh: fetchSession, setSession }}
+      value={{
+        data: sessionData,
+        status,
+        refresh: fetchSession,
+        setSession,
+        clearSession,
+      }}
     >
       {children}
     </SessionContext.Provider>
