@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.5.0](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.5.0) (2025-06-28)
+
+# [1.5.0](https://github.com/0xtiby/parse-server-nextjs/compare/v1.4.0...v1.5.0) (2025-06-28)
+
+
+### Features
+
+* add clearSession function and update README for optimized logout ([a282485](https://github.com/0xtiby/parse-server-nextjs/commit/a282485de3899ae11570927c31c80653ab4a9647))
+
+
+
+
+
 ## [v1.4.0](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.4.0) (2025-06-20)
 
 # [1.4.0](https://github.com/0xtiby/parse-server-nextjs/compare/v1.3.0...v1.4.0) (2025-06-20)
