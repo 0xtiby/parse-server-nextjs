@@ -163,6 +163,29 @@ The hook returns:
   - `'loading'`: Initial session loading
   - `'authenticated'`: User is signed in
   - `'unauthenticated'`: No active session
+- `refresh`: Function to manually refresh the session from the server
+- `setSession`: Function to manually set session data
+- `clearSession`: Function to immediately clear the session locally without making an HTTP request
+
+#### Optimized Logout with clearSession
+
+When performing a logout, you can use `clearSession()` to immediately update the session state locally instead of waiting for the automatic polling or making an unnecessary HTTP request. This is particularly useful when you've already triggered the logout yourself:
+
+```typescript
+import { useAuth, useSession } from "parse-server-nextjs/client";
+
+function LogoutButton() {
+  const { logout } = useAuth();
+  const { clearSession } = useSession();
+
+  const handleLogout = async () => {
+    await logout(); // Logout on server
+    clearSession(); // Immediately clear local session state
+  };
+
+  return <button onClick={handleLogout}>Logout</button>;
+}
+```
 
 ### Route Protection
 
