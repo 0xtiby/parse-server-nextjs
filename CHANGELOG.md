@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.5.1](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.5.1) (2025-06-29)
+
+## [1.5.1](https://github.com/0xtiby/parse-server-nextjs/compare/v1.5.0...v1.5.1) (2025-06-29)
+
+
+### Bug Fixes
+
+* update context parameter type in createAuth handler to use Promise ([945c0d3](https://github.com/0xtiby/parse-server-nextjs/commit/945c0d34cc37bed1911d889e4e757bf64edc6c93))
+
+
+
+
+
 ## [v1.5.0](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.5.0) (2025-06-28)
 
 # [1.5.0](https://github.com/0xtiby/parse-server-nextjs/compare/v1.4.0...v1.5.0) (2025-06-28)
