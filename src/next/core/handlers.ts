@@ -129,7 +129,7 @@ export function createAuth(config?: { oAuthProviders: Record<string, OAuthConfig
 
   const httpHandler = async (
     request: NextRequest,
-    context: { params: { "psnjs-auth": string[] } }
+    context: { params: Promise<{ "psnjs-auth": string[] }> }
   ) => {
     const params = await context.params;
     const [action, provider] = params["psnjs-auth"];
