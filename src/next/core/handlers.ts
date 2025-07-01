@@ -30,16 +30,27 @@ async function handleGet(
       });
 
     case AUTH_ACTIONS.OAUTH:
-      const oauth = await authService.redirectToOAuth(OAuthConfig![provider!]!);
+      const fromParam = request.nextUrl.searchParams.get("from");
+      const oauth = await authService.redirectToOAuth(
+        OAuthConfig![provider!]!,
+        fromParam
+      );
       return NextResponse.redirect(oauth);
 
     case AUTH_ACTIONS.CALLBACK:
       try {
-        await authService.handleOAuthCallback(
+        const redirectPath = await authService.handleOAuthCallback(
           provider!,
           OAuthConfig![provider!]!,
           request.nextUrl.searchParams
         );
+
+        // Build absolute URL if redirectPath is a relative path
+        const redirectUrl = redirectPath.startsWith("http")
+          ? redirectPath
+          : new URL(redirectPath, request.url).toString();
+
+        return NextResponse.redirect(redirectUrl);
       } catch (error) {
         if (error instanceof AuthServiceError) {
           return redirectFromAuthHandler(
@@ -51,11 +62,8 @@ async function handleGet(
             }
           );
         }
+        throw error;
       }
-      return redirectFromAuthHandler(
-        request,
-        OAuthConfig![provider!]!.afterLoginRedirect ?? DEFAULT_AFTER_OAUTHLOGIN_REDIRECT
-      );
     default:
       throw new AuthServiceError("Unknown action", 400);
   }

@@ -39,6 +39,7 @@ export interface Session {
 export interface OAuthSession {
   authState: string;
   codeVerifier?: string;
+  from?: string;
 }
 
 export interface OAuthConfig {

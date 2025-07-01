@@ -15,6 +15,7 @@ import { SessionService } from "./session";
 import { Attributes } from "parse";
 import ParseUser from "parse/types/ParseUser";
 import { LOGOUT_FUNCTION_NAME } from "../../parse-server";
+import { DEFAULT_AFTER_OAUTHLOGIN_REDIRECT } from "./constants";
 
 export class AuthServiceError extends Error {
   constructor(message: string, public code: number) {
@@ -127,7 +128,7 @@ export class AuthService {
     }
   }
 
-  async redirectToOAuth(oAuthConfig: OAuthConfig): Promise<string> {
+  async redirectToOAuth(oAuthConfig: OAuthConfig, from?: string | null): Promise<string> {
     const state = uuidv4();
     let codeVerifier: string | undefined = undefined;
 
@@ -155,7 +156,7 @@ export class AuthService {
 
     // Store the state and potentially the code_verifier in session
     // SessionService.setOAuthSession should be modified to accept codeVerifier
-    await SessionService.setOAuthSession(state, codeVerifier);
+    await SessionService.setOAuthSession(state, codeVerifier, from);
     return url.toString();
   }
 
@@ -163,9 +164,10 @@ export class AuthService {
     providerName: string,
     oAuthConfig: OAuthConfig,
     params: URLSearchParams
-  ) {
+  ): Promise<string> {
     const session = await SessionService.getOAuthSession();
-    const { authState, codeVerifier } = session;
+    const { authState, codeVerifier, from } = session;
+
     const { state, ...rest } = this.searchParamsToObject(params);
     if (state !== authState) {
       throw new AuthServiceError("Invalid state", 400);
@@ -175,7 +177,12 @@ export class AuthService {
       ...rest,
       codeVerifier,
     });
-    return this.signin(AUTH_TYPES.THIRD_PARTY, data);
+    await this.signin(AUTH_TYPES.THIRD_PARTY, data);
+
+    // Return redirect URL - use 'from' parameter if available, otherwise use configured redirect
+    const redirectUrl =
+      from || oAuthConfig.afterLoginRedirect || DEFAULT_AFTER_OAUTHLOGIN_REDIRECT;
+    return redirectUrl;
   }
 
   async getSession(): Promise<Session> {
