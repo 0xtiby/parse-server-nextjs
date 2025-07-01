@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.5.2](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.5.2) (2025-07-01)
+
+## [1.5.2](https://github.com/0xtiby/parse-server-nextjs/compare/v1.5.1...v1.5.2) (2025-07-01)
+
+
+### Bug Fixes
+
+* include search parameters in redirect URL for authMiddleware ([faca4a4](https://github.com/0xtiby/parse-server-nextjs/commit/faca4a40cf853b0bc905e3f37de584b8399beabd))
+
+
+
+
+
 ## [v1.5.1](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.5.1) (2025-06-29)
 
 ## [1.5.1](https://github.com/0xtiby/parse-server-nextjs/compare/v1.5.0...v1.5.1) (2025-06-29)
