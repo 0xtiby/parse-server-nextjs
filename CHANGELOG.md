@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.6.0](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.6.0) (2025-07-01)
+
+# [1.6.0](https://github.com/0xtiby/parse-server-nextjs/compare/v1.5.2...v1.6.0) (2025-07-01)
+
+
+### Features
+
+* add contextual redirection support in OAuth flow using 'from' parameter ([79195c5](https://github.com/0xtiby/parse-server-nextjs/commit/79195c5f9991c8b3dffe411842a241ec0c65e558))
+
+
+
+
+
 ## [v1.5.2](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.5.2) (2025-07-01)
 
 ## [1.5.2](https://github.com/0xtiby/parse-server-nextjs/compare/v1.5.1...v1.5.2) (2025-07-01)
