@@ -7,11 +7,12 @@ export async function authMiddleware(
   response: NextResponse,
   redirectTo: string = DEFAULT_LOGIN_PAGE
 ) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
   const session = await SessionService.getSessionMiddleware(request, response);
   if (!session.userId) {
     const url = new URL(redirectTo, request.url);
-    url.searchParams.set("from", pathname);
+    const fromUrl = pathname + search;
+    url.searchParams.set("from", fromUrl);
     return NextResponse.redirect(url);
   }
   return NextResponse.next();
