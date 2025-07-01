@@ -320,6 +320,76 @@ const { getOAuthUrl } = useAuth();
 window.location.href = getOAuthUrl("github");
 ```
 
+#### Contextual Redirection with `from` Parameter
+
+The OAuth flow supports preserving the user's original destination through the `from` parameter. This ensures users are redirected back to their intended page after authentication instead of a default landing page.
+
+##### How it works:
+
+The redirection follows this priority order:
+
+1. **`from` parameter** (highest priority) - The original URL the user was trying to access
+2. **`afterLoginRedirect`** - Provider-specific redirect URL configured in `OAuthConfig`
+3. **Default redirect** - Falls back to `"/"` if no other option is specified
+
+##### Usage Examples:
+
+**Basic OAuth without context:**
+
+```typescript
+// User will be redirected to "/" or `afterLoginRedirect` after auth
+window.location.href = getOAuthUrl("github");
+```
+
+**OAuth with contextual redirection:**
+
+```typescript
+import { useSearchParams } from "next/navigation";
+
+function LoginComponent() {
+  const { getOAuthUrl } = useAuth();
+  const searchParams = useSearchParams();
+
+  // Get the 'from' parameter (usually set by middleware)
+  const fromParam = searchParams.get("from");
+
+  // Add 'from' parameter to OAuth URL
+  const githubUrl = fromParam
+    ? `${getOAuthUrl("github")}&from=${encodeURIComponent(fromParam)}`
+    : getOAuthUrl("github");
+
+  return <a href={githubUrl}>Sign in with GitHub</a>;
+}
+```
+
+**Automatic flow via middleware:**
+
+```typescript
+// User tries to access: /dashboard
+// Middleware redirects to: /login?from=/dashboard
+// OAuth URL becomes: /api/auth/oauth/github?from=/dashboard
+// After auth: User lands on /dashboard
+```
+
+**Provider-specific default redirects:**
+
+```typescript
+const oAuthProviders = {
+  github: {
+    authorizeUrl: "...",
+    callBackFunction: async () => { ... },
+    afterLoginRedirect: "/dashboard", // GitHub users go to dashboard
+  },
+  google: {
+    authorizeUrl: "...",
+    callBackFunction: async () => { ... },
+    afterLoginRedirect: "/profile", // Google users go to profile
+  }
+};
+```
+
+This approach provides a seamless user experience by maintaining context throughout the authentication flow.
+
 ## Session Management
 
 Next Parse Auth uses iron-session for secure session management. Sessions can be configured through environment variables:

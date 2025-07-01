@@ -39,7 +39,11 @@ export class SessionService {
     return session;
   }
 
-  static async setOAuthSession(authState: string, codeVerifier?: string) {
+  static async setOAuthSession(
+    authState: string,
+    codeVerifier?: string,
+    from?: string | null
+  ) {
     const session = await getIronSession<OAuthSession>(
       await cookies(),
       OAuthSessionConfig
@@ -47,6 +51,9 @@ export class SessionService {
     session.authState = authState;
     if (codeVerifier) {
       session.codeVerifier = codeVerifier;
+    }
+    if (from) {
+      session.from = from;
     }
     await session.save();
   }
