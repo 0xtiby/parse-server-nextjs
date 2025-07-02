@@ -12,8 +12,11 @@ export class SessionService {
     await session.save();
   }
 
-  static async getSession() {
+  static async getSession(): Promise<Session | null> {
     const session = await getIronSession<Session>(await cookies(), sessionConfig);
+    if (!session.userId || !session.sessionToken) {
+      return null;
+    }
     return session;
   }
 

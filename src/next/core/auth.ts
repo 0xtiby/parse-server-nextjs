@@ -185,7 +185,7 @@ export class AuthService {
     return redirectUrl;
   }
 
-  async getSession(): Promise<Session> {
+  async getSession(): Promise<Session | null> {
     const session = await SessionService.getSession();
     return session;
   }
@@ -239,4 +239,4 @@ export class AuthService {
 }
 
 export const authService = new AuthService();
-export const auth = () => authService.getSession();
+export const auth = (): Promise<Session | null> => authService.getSession();
