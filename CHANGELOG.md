@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.6.1](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.6.1) (2025-07-02)
+
+## [1.6.1](https://github.com/0xtiby/parse-server-nextjs/compare/v1.6.0...v1.6.1) (2025-07-02)
+
+
+### Bug Fixes
+
+* update session handling to return null for unauthorized sessions ([077a8fe](https://github.com/0xtiby/parse-server-nextjs/commit/077a8fe0139cd9b90525a87daaeca94343a26b91))
+
+
+
+
+
 ## [v1.6.0](https://github.com/0xtiby/parse-server-nextjs/releases/tag/v1.6.0) (2025-07-01)
 
 # [1.6.0](https://github.com/0xtiby/parse-server-nextjs/compare/v1.5.2...v1.6.0) (2025-07-01)
