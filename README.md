@@ -224,7 +224,7 @@ import { auth } from "parse-server-nextjs";
 
 export default function ProtectedPage() {
   const session = await auth();
-  if (session.userId) {
+  if (!session) {
     return unauthorized();
   }
   return (
